@@ -31,6 +31,7 @@ const exp = {
                         skills: { $elemMatch: { name: { $in: data.skills } } }
                     }
                 }
+                data.populateArr = [{ path: 'upComingBatches', select: 'startDate name' }];
 
                 const x = await FilterTable(CourseModel, {
                     sortField: "createdAt",

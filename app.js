@@ -17,6 +17,7 @@ const app = express();
 // view engine setup
 import { fileURLToPath } from 'url';
 import batch from './app/api/batch.js';
+import email from './app/api/email.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -37,6 +38,7 @@ app.use(cors());
 user(app);
 course(app);
 batch(app);
+email(app);
 
 
 // catch 404 and forward to error handler

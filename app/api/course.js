@@ -29,7 +29,7 @@ export default (app) => {
             res.send(data);
         })
 
-    app.post('/course/update/:_id', async (req, res) => {
+    app.put('/course/update/:_id', async (req, res) => {
         const { body, params } = req;
         body.courseId = params._id;
         if (body.type === 'project') {

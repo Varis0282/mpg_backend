@@ -1,5 +1,5 @@
 import BatchModel from '../model/batch.js'
-import CourseCtrl from '../controller/course.js'
+import CourseModel from '../model/courses.js'
 import _ from 'lodash'
 import { successObj, errorObj } from '../../config/settings.js'
 import { FilterTable } from '../../config/table.js'
@@ -11,10 +11,12 @@ const exp = {
     add: (data) => {
         return new Promise(async (resolve) => {
             try {
-                let { data: course } = await CourseCtrl.findById({ _id: data.course });
-
+                let course = await CourseModel.findById(data.course);
                 if (!course) {
                     return resolve({ ...errorObj, message: "Course not found" })
+                }
+                if (course.duration !== data.duration) {
+                    return resolve({ ...errorObj, message: "Course Duration and Batch Duration must be equal !" });
                 }
 
                 const newBatch = new BatchModel()
@@ -22,7 +24,9 @@ const exp = {
                     newBatch[key] = value
                 })
                 newBatch.duration = course.durationInWeeks
-                await newBatch.save()
+                const batch = await newBatch.save()
+                course.upComingBatches.push(batch._id)
+                await course.save();
                 resolve({ ...successObj, message: "Batch added successfully" })
             } catch (error) {
                 console.log(error)
@@ -34,8 +38,7 @@ const exp = {
         return new Promise(async (resolve) => {
             try {
                 console.log(data)
-                const batchList = await BatchModel.find({ course: data.courseId })
-                console.log("🚀 => batchList:", batchList);
+                const batchList = await BatchModel.find({ course: data.courseId }).populate('course', 'name');
                 resolve({ ...successObj, data: batchList })
             } catch (error) {
                 console.log(error)

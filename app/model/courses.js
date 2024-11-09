@@ -83,6 +83,8 @@ const courseSchema = new Schema(
         durationInWeeks: { type: Number, required: true }, // in weeks
         usersEnrolled: [{ type: String, ref: 'User' }],
         upComingBatches: [{ type: String, ref: 'Batch' }],
+        price: { type: Number, required: true, default: 10000 },
+        actualPrice: { type: Number, required: true, default: 5000 },
     },
     { timestamps: true }
 )

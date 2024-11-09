@@ -83,6 +83,44 @@ const exp = {
                 resolve({ ...errorObj, message: error.message ? error.message : "Error while adding login history" })
             }
         })
+    },
+    verifyOtp: (data) => {
+        return new Promise(async (resolve) => {
+            let user = await UserModel.findOne({ email: data.email, lastOTP: data.otp })
+            if (!user) {
+                return resolve({ ...errorObj, message: "OTP doesn't match" })
+            }
+            user.verify.emailVerified = true
+            user.lastOTP = ""
+            await user.save();
+            return resolve({ ...successObj, message: "User verified successfully", data: user })
+        })
+    },
+    me: (data) => {
+        return new Promise(async (resolve) => {
+            let user = await UserModel.findById(data._id)
+            if (!user) {
+                return resolve({ ...errorObj, message: "Please login again" })
+            }
+            return resolve({ ...successObj, message: "User fetched successfully", data: user })
+        })
+    },
+    update: (data) => {
+        return new Promise(async (resolve) => {
+            try {
+                let user = await UserModel.findById(data._id)
+                if (!user) {
+                    return resolve({ ...errorObj, message: "Please login again" })
+                }
+                _.each(data,(v,k)=>{
+                    user[k] = v
+                })
+                await user.save()
+                return resolve({ ...successObj, message: "User updated successfully", data: user })
+            } catch (error) {
+
+            }
+        })
     }
 }
 

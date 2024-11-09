@@ -15,8 +15,8 @@ const academySchema = new Schema({
 });
 
 const verifySchema = new Schema({
-    emailVerified: { type: Boolean, default: false },
-    phoneVerified: { type: Boolean, default: false }
+    emailVerified: { type: Boolean, default: false, required: true },
+    phoneVerified: { type: Boolean, default: false, required: true }
 })
 
 const userSchema = new Schema(
